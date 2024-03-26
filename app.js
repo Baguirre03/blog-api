@@ -53,6 +53,7 @@ app.post('/api/login', (req, res) => {
   // Usually this is a request to login, s
   // ending username and pass, auth here with database
   // Skipping currently to getting user back
+  console.log(req.body);
   const user = {
     id: 3,
     username: 'Brad',
