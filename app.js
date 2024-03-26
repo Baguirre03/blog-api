@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -5,12 +6,12 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 mongoose.set('strictQuery', false);
-const mongoDB = process.env.MongoDB;
 main().catch((err) => console.log(err));
 async function main() {
-  await mongoose.connect(mongoDB);
+  await mongoose.connect(process.env.MongoDB);
 }
 
 const indexRouter = require('./routes/index');
@@ -35,7 +36,7 @@ app.get('/api', (req, res) => {
 });
 
 app.post('/api/posts', verifyToken, (req, res) => {
-  jwt.verify(req.token, 'secretkey', (err, authData) => {
+  jwt.verify(req.token, process.env.secretkey, (err, authData) => {
     if (err) {
       res.sendStatus(403);
     } else {
@@ -53,12 +54,12 @@ app.post('/api/login', (req, res) => {
   // ending username and pass, auth here with database
   // Skipping currently to getting user back
   const user = {
-    id: 1,
+    id: 3,
     username: 'Brad',
     email: 'brad@gmail.com',
   };
 
-  jwt.sign({ user }, 'secretkey', { expiresIn: '1000m' }, (err, token) => {
+  jwt.sign({ user }, process.env.key, (err, token) => {
     res.json({
       token,
     });
