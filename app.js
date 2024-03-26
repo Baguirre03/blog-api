@@ -15,12 +15,13 @@ async function main() {
 }
 
 const indexRouter = require('./routes/index');
+const loginRouter = require('./routes/login');
 
 const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -29,6 +30,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/login', loginRouter);
+
 app.get('/api', (req, res) => {
   res.json({
     message: 'welcome to the API',
@@ -36,7 +39,9 @@ app.get('/api', (req, res) => {
 });
 
 app.post('/api/posts', verifyToken, (req, res) => {
-  jwt.verify(req.token, process.env.secretkey, (err, authData) => {
+  console.log(req.body.username, req.body.password);
+
+  jwt.verify(req.token, process.env.key, (err, authData) => {
     if (err) {
       res.sendStatus(403);
     } else {
@@ -53,7 +58,6 @@ app.post('/api/login', (req, res) => {
   // Usually this is a request to login, s
   // ending username and pass, auth here with database
   // Skipping currently to getting user back
-  console.log(req.body);
   const user = {
     id: 3,
     username: 'Brad',
