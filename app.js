@@ -32,15 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 
-app.get('/api', (req, res) => {
-  res.json({
-    message: 'welcome to the API',
-  });
-});
-
 app.post('/api/posts', verifyToken, (req, res) => {
-  console.log(req.body.username, req.body.password);
-
   jwt.verify(req.token, process.env.key, (err, authData) => {
     if (err) {
       res.sendStatus(403);
@@ -50,24 +42,6 @@ app.post('/api/posts', verifyToken, (req, res) => {
         authData,
       });
     }
-  });
-});
-
-app.post('/api/login', (req, res) => {
-  // Mock User
-  // Usually this is a request to login, s
-  // ending username and pass, auth here with database
-  // Skipping currently to getting user back
-  const user = {
-    id: 3,
-    username: 'Brad',
-    email: 'brad@gmail.com',
-  };
-
-  jwt.sign({ user }, process.env.key, (err, token) => {
-    res.json({
-      token,
-    });
   });
 });
 

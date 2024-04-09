@@ -5,7 +5,13 @@ exports.login_get = asyncHandler(async (req, res, next) => {
   res.json('jhi');
 });
 
+exports.test = asyncHandler(async (req, res, next) => {
+  res.json('test');
+});
+
 exports.login_post = asyncHandler(async (req, res, next) => {
+  const userName = req;
+  console.log(userName);
   // Mock User
   // Usually this is a request to login, s
   // ending username and pass, auth here with database
