@@ -16,6 +16,7 @@ async function main() {
 
 const indexRouter = require('./routes/index');
 const loginRouter = require('./routes/login');
+const signupRouter = require('./routes/signup');
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
+app.use('/signup', signupRouter);
 
 app.post('/api/posts', verifyToken, (req, res) => {
   jwt.verify(req.token, process.env.key, (err, authData) => {
