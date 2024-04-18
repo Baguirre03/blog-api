@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
+// Not really used, but created to practice using token and authdata
 exports.login_get = asyncHandler(async (req, res, next) => {
   jwt.verify(req.token, process.env.key, (err, authData) => {
     if (err) {
