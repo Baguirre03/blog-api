@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+const cors = require('cors');
 require('dotenv').config();
 
 mongoose.set('strictQuery', false);
@@ -30,44 +31,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.head('Access-Control-Allow-Origin: *');
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/signup', signupRouter);
 app.use('/posts', postRouter);
 
-app.post('/api/posts', verifyToken, (req, res) => {
-  jwt.verify(req.token, process.env.key, (err, authData) => {
-    if (err) {
-      res.sendStatus(403);
-    } else {
-      res.json({
-        message: 'Post created...',
-        authData,
-      });
-    }
-  });
-});
+app.use(cors({
+  origin: 'http://localhost:5173/',
+  methods: 'GET,PUT,POST',
+  optionsSuccessStatus: 204,
+}));
 
 // FORMAT OF TOKEN
 // Authorization: Bearer <acces_token>
-
-// Verify Token
-function verifyToken(req, res, next) {
-  // Get auth header value
-  const bearerHeader = req.headers.authorization;
-
-  // Check if undefined
-  if (typeof bearerHeader !== 'undefined') {
-    const token = bearerHeader.split(' ')[1];
-    // Set token
-    req.token = token;
-    next();
-  } else {
-    // Forbidden
-    res.sendStatus(403);
-  }
-}
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

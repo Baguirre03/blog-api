@@ -5,10 +5,8 @@ const Article = require('../models/post.js');
 const Comment = require('../models/comment.js');
 
 exports.article_list = asyncHandler(async (req, res, next) => {
-  const allArticles = await Article.find().sort({ name: 1 }).exec();
-  res.json({
-    articles: allArticles,
-  });
+  const allArticles = await Article.find().populate('user').sort({ name: 1 }).exec();
+  res.json({ allArticles });
 });
 
 exports.article_detail = asyncHandler(async (req, res, next) => {
@@ -23,7 +21,7 @@ exports.article_detail = asyncHandler(async (req, res, next) => {
     return res.json(err);
   }
 
-  res.json({
+  return res.json({
     article,
     allArticleComments,
   });
