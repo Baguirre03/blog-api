@@ -11,7 +11,7 @@ exports.article_list = asyncHandler(async (req, res, next) => {
 
 exports.article_detail = asyncHandler(async (req, res, next) => {
   const [article, allArticleComments] = await Promise.all([
-    Article.findById(req.params.id).exec(),
+    Article.findById(req.params.id).populate('user').exec(),
     Comment.find({ artist: req.params.id }).populate('user date comment').exec(),
   ]);
 
