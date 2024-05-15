@@ -1,26 +1,25 @@
-const asyncHandler = require('express-async-handler');
-const bcrypt = require('bcryptjs');
-const { body, validationResult } = require('express-validator');
-const User = require('../models/user.js');
+const asyncHandler = require("express-async-handler");
+const bcrypt = require("bcryptjs");
+const { body, validationResult } = require("express-validator");
+const User = require("../models/user.js");
 
 exports.signup_post = [
-  body('username')
+  body("username")
     .trim()
     .isLength({ min: 1 })
     .escape()
     .custom(async (value, { req, loc, path }) => {
-      const user = await User.findOne({ username: req.body.username.toLowerCase() });
+      const user = await User.findOne({
+        username: req.body.username.toLowerCase(),
+      });
       if (user) {
-        throw new Error('Username is taken!');
+        throw new Error("Username is taken!");
       } else {
         return value;
       }
     }),
-  body('password')
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),
-  body('confirm_password')
+  body("password").trim().isLength({ min: 1 }).escape(),
+  body("confirm_password")
     .trim()
     .isLength({ min: 1 })
     .custom((value, { req, loc, path }) => {
@@ -34,7 +33,7 @@ exports.signup_post = [
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.status(404).json('error');
+      res.status(404).json("error");
     } else {
       bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
         try {
@@ -44,9 +43,9 @@ exports.signup_post = [
             membership: false,
           });
           await user.save();
-          return res.json('user created');
+          return res.json("user created");
         } catch (err) {
-          return res.status(404).json('error');
+          return res.status(404).json("error", err);
         }
       });
     }
