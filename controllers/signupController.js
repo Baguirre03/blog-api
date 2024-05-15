@@ -32,8 +32,12 @@ exports.signup_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
+    let msg = {
+      errors: [],
+    };
     if (!errors.isEmpty()) {
-      res.status(404).json("error");
+      errors.errors.forEach((err) => msg.errors.push(err.msg));
+      res.status(404).json(msg);
     } else {
       bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
         try {
@@ -43,9 +47,9 @@ exports.signup_post = [
             membership: false,
           });
           await user.save();
-          return res.json("user created");
+          return res.json(msg);
         } catch (err) {
-          return res.status(404).json("error", err);
+          return res.status(404).json(msg);
         }
       });
     }
