@@ -29,12 +29,12 @@ exports.login_post = asyncHandler(async (req, res, next) => {
 
   if (!user) {
     rsp.errors = "User not found";
-    res.json(rsp);
+    res.json({ rsp: rsp });
   }
   const match = await bcrypt.compare(req.body.password, user.password);
   if (!match) {
     rsp.errors = "Incorrect password!";
-    res.json(rsp);
+    res.json({ rsp: rsp });
   } else {
     rsp.loggedin = true;
   }
@@ -44,6 +44,7 @@ exports.login_post = asyncHandler(async (req, res, next) => {
     res.json({
       token,
       rsp,
+      user,
     });
   });
 });
