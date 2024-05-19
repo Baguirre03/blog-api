@@ -1,16 +1,17 @@
 /* eslint-disable import/no-extraneous-dependencies */
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
-const { DateTime } = require('luxon');
+const { DateTime } = require("luxon");
 
 const postSchema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: 'user' },
+  user: { type: Schema.Types.ObjectId, ref: "user" },
+  title: { type: String },
   time: { type: Date },
   text: { type: String, required: true },
 });
 
-postSchema.virtual('date_formatted').get(function () {
+postSchema.virtual("date_formatted").get(function () {
   return DateTime.fromJSDate(this.time).toLocaleString(DateTime.DATETIME_MED);
 });
 
@@ -18,4 +19,4 @@ postSchema.virtual('date_formatted').get(function () {
 //   return `/${this._id}`;
 // });
 
-module.exports = mongoose.model('posts', postSchema);
+module.exports = mongoose.model("posts", postSchema);

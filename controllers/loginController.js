@@ -29,12 +29,12 @@ exports.login_post = asyncHandler(async (req, res, next) => {
 
   if (!user) {
     rsp.errors = "User not found";
-    res.json({ rsp: rsp });
+    res.json({ rsp });
   }
   const match = await bcrypt.compare(req.body.password, user.password);
   if (!match) {
     rsp.errors = "Incorrect password!";
-    res.json({ rsp: rsp });
+    res.json({ rsp });
   } else {
     rsp.loggedin = true;
   }
