@@ -15,22 +15,60 @@ exports.article_list = asyncHandler(async (req, res, next) => {
 exports.article_detail = asyncHandler(async (req, res, next) => {
   const [article, allArticleComments] = await Promise.all([
     Article.findById(req.params.id).populate("user").exec(),
-    Comment.find({ artist: req.params.id })
-      .populate("user date comment")
-      .exec(),
+    Comment.find({ article: req.params.id }).populate("user").exec(),
   ]);
-
   if (article === null) {
     const err = new Error("Article not found");
     err.status = 404;
     return res.json(err);
   }
-
   return res.json({
     article,
     allArticleComments,
   });
 });
+
+exports.article_comment_post = [
+  body("text").trim().isLength({ min: 1 }).escape(),
+
+  asyncHandler(async (req, res, next) => {
+    let rsp = {
+      created: false,
+      error: "",
+    };
+
+    jwt.verify(req.token, process.env.key, async (err, authData) => {
+      if (err) {
+        rsp.error = err;
+        return res.sendStatus(403).json(rsp);
+      } else {
+        const errors = validationResult(req);
+        const comment = new Comment({
+          user: authData.user,
+          date: new Date(),
+          text: req.body.text,
+          article: req.params.id,
+        });
+        if (!errors.isEmpty()) {
+          rsp.error = err;
+          return res.json(rsp);
+        } else {
+          await comment.save();
+          const allComments = await Comment.find({ article: req.params.id })
+            .populate("user")
+            .exec();
+          rsp.created = true;
+          return res.json({
+            comment,
+            authData,
+            rsp,
+            allComments,
+          });
+        }
+      }
+    });
+  }),
+];
 
 exports.article_create_post = [
   body("text").trim().isLength({ min: 1 }).escape(),
