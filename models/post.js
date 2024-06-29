@@ -7,7 +7,7 @@ const { DateTime } = require("luxon");
 const postSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "user" },
   title: { type: String },
-  time: { type: Date },
+  date: { type: Date },
   text: { type: String, required: true },
 });
 

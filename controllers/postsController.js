@@ -3,6 +3,8 @@ const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const Article = require("../models/post.js");
 const Comment = require("../models/comment.js");
+const createResponse = require("./response.js");
+const { DateTime } = require("luxon");
 
 exports.article_list = asyncHandler(async (req, res, next) => {
   const allArticles = await Article.find()
@@ -32,10 +34,7 @@ exports.article_comment_post = [
   body("text").trim().isLength({ min: 1 }).escape(),
 
   asyncHandler(async (req, res, next) => {
-    let rsp = {
-      created: false,
-      error: "",
-    };
+    let rsp = createResponse();
 
     jwt.verify(req.token, process.env.key, async (err, authData) => {
       if (err) {
@@ -75,10 +74,7 @@ exports.article_create_post = [
   body("title").trim().isLength({ min: 1 }).escape(),
 
   asyncHandler(async (req, res, next) => {
-    let rsp = {
-      created: false,
-      error: "",
-    };
+    let rsp = createResponse();
 
     jwt.verify(req.token, process.env.key, async (err, authData) => {
       if (err) {
@@ -90,7 +86,7 @@ exports.article_create_post = [
           user: authData.user,
           title: req.body.title,
           text: req.body.text,
-          time: new Date(),
+          date: new Date(),
         });
 
         if (!errors.isEmpty()) {
@@ -98,6 +94,7 @@ exports.article_create_post = [
           return res.json(rsp);
         } else {
           await article.save();
+
           rsp.created = true;
           return res.json({
             article,

@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
+const createResponse = require("./response");
 
 // Not really used, but created to practice using token and authdata
 exports.login_get = asyncHandler(async (req, res, next) => {
@@ -22,10 +23,7 @@ exports.login_post = asyncHandler(async (req, res, next) => {
     username: req.body.username.toLowerCase(),
   });
 
-  let rsp = {
-    loggedin: false,
-    errors: "",
-  };
+  let rsp = createResponse(true);
 
   if (!user) {
     rsp.errors = "User not found";
