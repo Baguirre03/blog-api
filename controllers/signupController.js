@@ -19,6 +19,7 @@ exports.signup_post = [
       }
     }),
   body("password").trim().isLength({ min: 1 }).escape(),
+  body("description").trim().isLength({ min: 1, max: 50 }).escape(),
   body("confirm_password")
     .trim()
     .isLength({ min: 1 })
@@ -44,6 +45,7 @@ exports.signup_post = [
           const user = new User({
             username: req.body.username.toLowerCase(),
             password: hashedPassword,
+            description: req.body.description,
             membership: false,
           });
           await user.save();

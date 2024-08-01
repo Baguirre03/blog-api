@@ -79,7 +79,7 @@ exports.article_create_post = [
     jwt.verify(req.token, process.env.key, async (err, authData) => {
       if (err) {
         rsp.error = err;
-        return res.sendStatus(403).json(rsp);
+        return res.sendStatus(403).json({ article, authData, rsp });
       } else {
         const errors = validationResult(req);
         const article = new Article({
@@ -91,7 +91,7 @@ exports.article_create_post = [
 
         if (!errors.isEmpty()) {
           rsp.error = err;
-          return res.json(rsp);
+          return res.json({ article, authData, rsp });
         } else {
           await article.save();
 
