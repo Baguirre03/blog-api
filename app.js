@@ -24,7 +24,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://top-blog-ba.netlify.app/",
+    origin: "https://top-blog-ba.netlify.app",
     methods: "GET,PUT,POST",
     optionsSuccessStatus: 204,
   })
