@@ -31,7 +31,7 @@ exports.article_detail = asyncHandler(async (req, res, next) => {
 });
 
 exports.article_comment_post = [
-  body("text").trim().isLength({ min: 1 }).escape(),
+  body("text").trim().isLength({ min: 1 }),
 
   asyncHandler(async (req, res, next) => {
     let rsp = createResponse();
@@ -70,8 +70,8 @@ exports.article_comment_post = [
 ];
 
 exports.article_create_post = [
-  body("text").trim().isLength({ min: 1 }).escape(),
-  body("title").trim().isLength({ min: 1 }).escape(),
+  body("text").trim().isLength({ min: 1 }),
+  body("title").trim().isLength({ min: 1 }),
 
   asyncHandler(async (req, res, next) => {
     let rsp = createResponse();
@@ -108,7 +108,7 @@ exports.article_create_post = [
 ];
 
 exports.article_update_post = [
-  body("text").trim().isLength({ min: 1 }).escape(),
+  body("text").trim().isLength({ min: 1 }),
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
